@@ -1,10 +1,28 @@
-//
-// server.js
-//
+const express = require('express');
+const helmet = require('helmet');
 
-const app = require('./app');
-const port = 1337;
+const projectsRouter = require('./projects/projectsRouter');
+const actionsRouter = require("./actions/actionsRouter")
 
-app.listen(port, function () {
-    console.log('Express server listening on port ' + port);
-});
+const server = express();
+
+const cors=require("cors");
+const corsOptions ={
+   origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
+
+server.use(cors(corsOptions)) // Use this after the variable declaration
+
+server.use(helmet());
+
+server.use('/api/projects', projectsRouter);
+
+server.use("/api/actions", actionsRouter)
+
+server.get("/", (req, res) => {
+  res.status(200).json({ message: "API IS WORKING" })
+})
+
+module.exports = server;
